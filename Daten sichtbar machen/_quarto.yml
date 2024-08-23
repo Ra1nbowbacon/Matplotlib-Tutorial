@@ -3,7 +3,6 @@ project:
 
 website:
   title: "![logo](img/logo.png){height=50px}"
-  output-dir: docs
   
   navbar:
     left:
