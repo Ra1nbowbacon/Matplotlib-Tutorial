@@ -1,0 +1,8 @@
+---
+title: "Impressum"
+---
+Diese Website ist im Zuge des Seminars *Erarbeitung Schulungsmaterialien*, unter Leitung von [Dr. Franziska Klemstein](https://i3mainz.hs-mainz.de/team/franziskaklemstein/) im Sommersemester 2024 an der [Johannes-Gutenberg-Universität Mainz](https://www.uni-mainz.de/) entstanden.
+
+Autoren: Lisa Brandner, Inka Jurk und Johanna Mauermann
+
+Kontaktieren Sie uns unter: someone@somewhere.de

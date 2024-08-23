@@ -1,0 +1,156 @@
+---
+title: "Formen und Linien"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+Formen und Linienanpassungen in Diagrammen helfen uns, Daten klarer und ansprechender darzustellen. Mit verschiedenen Linienarten und Formen können wir wichtige Informationen hervorheben und verschiedene Kategorien leicht unterscheiden.
+
+___
+### Formen
+
+Formen können bei der Datenpunktmarkierung eine Rolle spielen. 
+
+Mit dem Parameter `marker` kann das Aussehen eines Datenpunktes angepasst werden und mit `markersize` die Größe. Dabei erwartet `markersize` einen numerischen Wert und `marker` einen speziellen String, der die Form definiert. 
+
+: Beispiele verschiedener Punktmarker {.striped .hover}
+
+| String   | Beschreibung |
+|--------|--------|
+| `"."`  | Punkt  |
+| `"o"` | Kreis  |
+| `"*"` | Stern  |
+| `"s"` | Rechteck   |
+
+Es gibt noch viel mehr Arten von Punktmarkern die [hier](https://matplotlib.org/stable/api/markers_api.html) gefunden werden können. 
+
+```{python}
+#| fig-cap: "Top 3 Länder mit den meisten Attacken"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+# Gruppieren nach Jahr und Land und Zählen der Vorfälle
+incident_counts = df.groupby(['country_name', 'year']).size().reset_index(name='incident_count')
+
+# Berechnen der Gesamtanzahl der Vorfälle pro Land
+total_incidents_per_country = incident_counts.groupby('country_name')['incident_count'].sum().reset_index()
+
+# Finden der drei Länder mit den meisten Vorfällen
+top_3_countries = total_incidents_per_country.nlargest(3, 'incident_count')['country_name']
+
+# Filtere die Daten für die drei Länder mit den meisten Vorfällen
+top_3_data = incident_counts[incident_counts['country_name'].isin(top_3_countries)]
+
+# Verschiedene Punktformen für die Länder definieren
+markers = ['o', 's', '^']  # (Kreis, Quadrat, Dreieck)
+
+# Scatterplot erstellen
+plt.figure(figsize=(7.5, 7))
+
+# Hinzufügen von mehr Achsenstrichen
+plt.minorticks_on()
+
+#Jedem Land wird eine unterschiedliche Form zugewiesen
+for i, (country, marker) in enumerate(zip(top_3_countries, markers)):
+    country_data = top_3_data[top_3_data['country_name'] == country] # Filtern der Daten 
+    plt.scatter(country_data['year'], country_data['incident_count'], label=country, marker=marker) # Erstellen des Scatterplots mit jeweiliger Form und Land
+
+# Achsenbeschriftungen und Titel hinzufügen
+plt.xlabel('Jahr')
+plt.ylabel('Anzahl der Attacken')
+plt.title('Top 3 Länder mit den meisten Attacken')
+plt.legend()
+
+# Plot anzeigen
+plt.show()
+
+```
+
+Dieses Scatterplot zeigt uns die drei Länder mit den meisten Attacken, dabei haben wir jedem Land eine andere Form zugewiesen. Mit `markers = ['o', 's', '^']` haben wir eine Liste an Formen erstellt, die wir dann in der `for-Schleife` einem Land zuweisen.
+
+___
+### Linien
+
+Der Parameter `linestyle` nimmt einen String, der den Strichstil einer Linie definiert. Der Parameter `linewidth` nimmt einen numerischen Wert, der die Linienbreite definiert. 
+
+: Liste verschiedener Linienarten {.striped .hover}
+
+| String   | Beschreibung |
+|--------|--------|
+| `"solid"`  | Durchgezogen  |
+| `"dashed"` | Gestrichelt  |
+| `"dotted"` | Gepunktet   |
+| `"dashdot"` | Striche und Punkte abwechselnd   |
+
+Noch mehr über Linienarten kann [hier](https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html) gefunden werden. 
+
+```{python}
+#| fig-cap: "Anzahl der Attacken pro Jahr mit angepasster Linie"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+# Gruppieren nach Jahr und Zählen der Gesamtanzahl der Vorfälle pro Jahr
+incident_counts = df.groupby('year').size().reset_index(name='incident_count')
+ 
+# Scatterplot erstellen
+plt.figure(figsize=(7.5, 6))
+
+# Darstellen der Linie mit Anpassungen
+plt.plot(incident_counts['year'], incident_counts['incident_count'], color='mediumslateblue', linestyle='dashed', linewidth=2.5)
+ 
+# Achsenbeschriftungen und Titel hinzufügen
+plt.xlabel('Jahr')
+plt.ylabel('Anzahl der Attacken')
+plt.title('Anzahl der Attacken pro Jahr', fontsize=15)
+ 
+# Plot anzeigen
+plt.show()
+
+```
+
+In dem Beispiel haben wir mithilfe von `plt.plot(incident_counts['year'], incident_counts['incident_count'], color='mediumslateblue', linestyle='dashed', linewidth=3)` ein Liniendiagramm erstellt, in dem wir die Farbe, den Stil und die Breite angepasst haben, um die Anzahl der Attacken pro Jahr darzustellen. 
+
+Linien können auch in einem Scatterplot integriert werden, um Datenpunkte miteinander zu verbinden: 
+
+```{python}
+#| fig-cap: "Anzahl der Attacken pro Jahr mit Linien"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+# Gruppieren nach Jahr und Zählen der Gesamtanzahl der Vorfälle pro Jahr
+incident_counts = df.groupby('year').size().reset_index(name='incident_count')
+ 
+# Scatterplot erstellen
+plt.figure(figsize=(7.5, 6))
+ 
+# Scatterplot für die Anzahl der Vorfälle pro Jahr
+plt.scatter(incident_counts['year'], incident_counts['incident_count'], color='darkorange', zorder=2)
+
+# Eine Linie, die alle Datenpunkte verbindet
+plt.plot(incident_counts['year'], incident_counts['incident_count'], color='peachpuff', zorder=1)
+ 
+# Achsenbeschriftungen und Titel hinzufügen
+plt.xlabel('Jahr')
+plt.ylabel('Anzahl der Attacken')
+plt.title('Anzahl der Attacken pro Jahr', fontsize=15)
+ 
+# Plot anzeigen
+plt.show()
+
+```
+
+In diesem Scatterplot haben wir mithilfe der Funktion `plt.plot(incident_counts['year'], incident_counts['incident_count'], color='peachpuff', zorder=1)` Linien hinzugefügt, um die Datenpunkte miteinander zu verbinden. Dabei übergibt man der Funktion `plt.plot()` die gleichen Daten wie dem Scatterplot. Alle anderen Parameter sind optional, wie zum Beispiel das Anpassen der Farbe mit `color='peachpuff'`, zusätzlich kann man hier auch mit den oben beschriebenen Parametern `linestyle` und `linewidth` arbeiten. Wir haben hier außerdem die Linie unter die Datenpunkte gesetzt, dies geschieht mit dem Parameter `zorder`, welchen man einmal der Scatterplot-Funktion `plt.scatter()` und der Linien-Funktion `plt.plot()` übergibt. Der Parameter bekommt dann eine Zahl, die die Reihenfolge anzeigt. 

@@ -1,0 +1,8 @@
+---
+title: "Über den Datensatz"
+
+---
+Um die Prinzipien der Datenvisualisierung anhand konkreter Beispiele zu erklären, werden wir in diesem Kurs mit einem Datensatz aus dem geisteswissenschaftlichen Forschungskontext arbeiten. Es handelt sich um den [Right Wing Terrorism and Violence (RTV)-Datensatz](https://www.sv.uio.no/c-rex/english/groups/rtv-dataset/index.html), der unter einer CC BY Lizenz im Internet zur Verfügung steht und seit 2015 von der RTV Steering Group unter Leitung von Jacob A. Ravndal gepflegt wird. Er enthält umfassende statistische Daten zu rechter Gewalt in Westeuropa ab 1990. Enthalten sind unter anderem Daten zu Opferzahlen und Opfergruppen von Angriffen, aber auch geographische Angaben. Besonders hilfreich ist die gute Dokumentation des Datensatzes: im [RTV Error Profile](https://www.sv.uio.no/c-rex/english/groups/rtv-dataset/2023-rtv-error-profile.pdf) und [RTV Codebook](https://www.sv.uio.no/c-rex/english/groups/rtv-dataset/2023-rtv-codebook-1990-2022.pdf) finden sich umfassende Informationen zur Erhebung der Daten und möglichen Biases. Damit bietet der Datensatz vielfältige Möglichkeiten zur Analyse, hält aber auch einige Herausforderungen bereit, die bei der Arbeit mit Daten immer wieder auftreten.
+
+Quelle: Ravndal, Jacob Aasland (2016) “Right-wing terrorism and violence in Western Europe: Introducing the RTV dataset”, Perspectives on Terrorism, 10(3): 2-15
+

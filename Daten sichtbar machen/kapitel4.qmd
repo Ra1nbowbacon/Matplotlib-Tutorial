@@ -1,0 +1,31 @@
+--- 
+title: "Wahl der Visualisierung" 
+--- 
+
+Wir haben den Datensatz ausgewählt und erfolgreich eingelesen. Nun geht es an die Visualisierung der Daten, doch wie kommt man dorthin? Es existiert eine geradezu endlose Auswahl an verschiedenen Plots und Diagrammen. [Hier](https://matplotlib.org/stable/gallery/index.html) gibt es einen umfassenden Überblick für die Möglichkeiten mit matplotlib. Diese Vielfalt kann für Anfänger schnell überfordernd sein, wenn man im Grunde noch keine wirkliche Idee hat, wie man überhaupt eine Visualisierung erstellt, und anhand welcher Kriterien man die richtige Art der Darstellung auswählt.
+
+___ 
+### Welche Darstellung eignet sich wofür? 
+
+Nicht jede Art der Visualisierung ist für alles gleichermaßen gut geeignet. Oft wählt man besser eine einfache Option, die möglichst wenig den Blick von den Daten – die ja der Hauptprotagonist sein sollten – ablenkt. 
+
+Bei der Wahl der Visualisierung sollten zudem beachtet werden: 
+
+- __Art der Daten:__ Es gilt zu bestimmen, ob die Daten qualitativ oder quantitativ bzw. kategorisch oder numerisch sind. Zum Beispiel eignen sich Balkendiagramme gut für kategorische Daten, während Liniendiagramme oft für zeitliche Trends verwendet werden. 
+
+- __Ziel der Visualisierung:__ Geht es einem um die Veranschaulichung von Trends und Entwicklungen? Den Vergleich von Datenpunkten? Das Aufzeigen von Verteilungen oder Proportionen? Abhängig vom Ziel der Visualisierung, eignen sich verschiedene Darstellungen besser oder schlechter. 
+
+Man sollte sich also anhand der Frage, *was* man zeigen möchte, überlegen, *wie* man es zeigen möchte, d.h. welche Visualisierung man auswählt. 
+
+___ 
+### Verschiedene Plots und Diagramme
+
+In den folgenden Kapiteln gibt es einen Überblick über ein paar gängige Arten von Plots und Diagrammen, die mithilfe der matplotlib-Bibliothek erstellt werden können. Dazu werden Hinweise geliefert, für was für Darstellungen und Fragestellungen diese besonders geeignet sein könnten. 
+
+- [Line Charts](linePlot.qmd)
+- [Bar Charts](barChart.qmd) 
+- [Kreisdiagramme](pieChart.qmd) 
+- [Scatter Plots](scatterPlot.qmd)
+- [Histogramme](histogramm.qmd)
+- [Boxplots](boxplot.qmd) 
+- [Heatmaps](heatmap.qmd)

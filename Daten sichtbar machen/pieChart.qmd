@@ -1,0 +1,63 @@
+---
+title: "Pie Charts"
+format:
+  html:
+    code-fold: true
+jupyter: python3 
+---
+
+Pie Charts, oder auch Kreisdiagramme, sind ein beliebtes Werkzeug zur Darstellung von Proportionen, vor allem wenn es darum geht prozentuale Verteilungen von Kategorien darzustellen. Sie begegnen einem im Alltag oft, aber in der Wissenschaft wird eher von der Verwendung abgeraten: Das menschliche Auge kann aus ihnen die Proportionen nicht präzise erkennen. Der Vollständigkeit halber sollen sie aber trotzdem vorgestellt werden. 
+
+### Grundsätzliche Struktur eines Kreisdiagramms
+
+Das folgende Beispiel zeigt, wie ein einfaches Kreisdiagramm erstellt wird. Die Prozentangaben sind optional, werden aber empfohlen, um die Lesbarkeit und das Verständnis der dargestellten Daten zu verbessern. 
+
+```{python}
+import matplotlib.pyplot as plt
+
+# Daten für das Pie Chart
+labels = ['Kategorie A', 'Kategorie B', 'Kategorie C']
+sizes = [40, 35, 25]  # Die Prozentwerte der Kategorien
+
+# Erstellen des Pie Charts
+plt.pie(sizes, labels=labels, autopct='%1.1f%%')
+
+# Hinzufügen von Titel
+plt.title('Verteilung der Kategorien')
+
+# Anzeigen des Diagramms
+plt.show()
+```
+
+### Beispiel anhand des RTV-Datensatzes 
+
+Hier haben wir die Frage gestellt, wie die Verteilung der Target Groups der Angriffe ist. Wichtig beim Erstellen von Kreisdiagrammen ist die __Vermeidung von zu vielen Kategorien__. "Unknown" und "Other" - im Datensatz separate Kategorien - wurden deshalb zur besseren Lesbarkeit gruppiert. 
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dateipfad
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Lese Excel-Datei ein
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Ersetzen von "Unknown" und "Other" durch "Unknown/Other"
+df['grouped_target_group'] = df['grouped_target_group'].replace(['Unknown', 'Other'], 'Unknown/Other')
+
+# Häufigkeit der Kategorien in der Spalte 'grouped_target_group' berechnen
+target_group_counts = df['grouped_target_group'].value_counts()
+
+# Erstellen des Pie Charts
+plt.pie(target_group_counts, labels=target_group_counts.index, autopct='%1.1f%%', startangle=140)
+
+# Hinzufügen von Titel
+plt.title('Verteilung der Zielgruppen')
+
+# Anzeigen des Diagramms
+plt.show()
+```
+
+Man kann anhand der Visualisierung erkennen, dass die meisten Angriffsopfer der Gruppe "Ethnic/religious minorities" zugeordnet wurden.  
+

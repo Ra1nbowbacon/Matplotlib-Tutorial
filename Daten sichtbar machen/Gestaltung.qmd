@@ -1,0 +1,13 @@
+---
+title: "Gestaltung"
+---
+
+Die Gestaltung einer Visualisierung richtet sich nach der Art der Daten. Eine gute Visualisierung sollte dabei die Daten klar und genau darstellen, ohne irreführend zu sein oder die Daten zu verzerren. Gleichzeitig sollte sie auch optisch ansprechend sein, da eine ansprechende Darstellung die Aussagekraft der Visualisierung verstärken kann. Ablenkende Farben, unausgewogene Gestaltungselemente oder andere störende Merkmale machen es dem Betrachter schwerer, die Informationen richtig zu interpretieren.
+
+Es gibt mehrere Punkte, die bei der Gestaltung beachtet werden sollten, an denen sich dieses Kapitel orientiert: 
+
+1. [Achsenanpassungen](achsen_groesse.qmd): Wie können Achsen angepasst werden?
+2. [Formen und Linien](formen_linien.qmd): Wie können Formen und Linien verwendet und angepasst werden?
+3. [Farben](farben.qmd): Wie können wir Farben verwenden?
+4. [Beschriftungen](text.qmd): Wie gestalten wir Text? 
+5. [Überlappungen vermeiden](ueberlappungen.qmd): Wie können wir mit Überlappungen von Datenpunkten umgehen? 

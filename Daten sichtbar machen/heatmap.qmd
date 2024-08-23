@@ -1,0 +1,103 @@
+---
+title: "Heatmaps"
+format:
+  html:
+    code-fold: true
+jupyter: python3 
+---
+
+Eine Heatmap ist eine grafische Darstellung von Daten, bei der individuelle Werte in einer Matrix durch Farben dargestellt werden. Sie eignet sich besonders gut, um Muster oder Korrelationen in großen Datensätzen zu erkennen, da sie es ermöglicht, auf einen Blick Zusammenhänge zu visualisieren. Clusterbildung und Anomalien in Datensätzen können mit ihrer Hilfe identifiziert werden. 
+
+___
+### Bestandteile einer Heatmap
+
+- __Farben:__ Die Hauptkomponente der Heatmap, die den Wertebereich der Daten repräsentiert. Unterschiedliche Farbschattierungen zeigen die Intensität der Werte an, wobei häufig eine Farbskala verwendet wird.
+- __Achsenbeschriftungen:__ Geben Kontext zu den dargestellten Daten und ermöglichen es, spezifische Zellen innerhalb der Heatmap zu identifizieren.
+- __Farblegende:__ Erklärt die Bedeutung der Farben und hilft dabei, die dargestellten Daten korrekt zu interpretieren.
+
+___ 
+### Grundsätzliche Struktur einer Heatmap 
+
+Im folgenden Beispiel wird eine einfache Heatmap erstellt, die die Häufigkeit von Ereignissen in verschiedenen Kategorien und Zeiträumen darstellt. 
+
+```{python} 
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Beispiel-Daten: Eine Matrix von Zahlen
+data = {
+    'Category A': [1, 2, 3],
+    'Category B': [4, 5, 6],
+    'Category C': [7, 8, 9]
+}
+
+# Erstelle ein DataFrame
+df = pd.DataFrame(data, index=['Row 1', 'Row 2', 'Row 3'])
+
+# Erstelle eine Heatmap
+plt.figure(figsize=(8, 5))
+plt.imshow(df, cmap='viridis', aspect='auto')
+
+# Füge Farbbalken hinzu
+plt.colorbar(label='Value')
+
+# Setze die Achsenbeschriftungen
+plt.xticks(range(len(df.columns)), df.columns, rotation=45)
+plt.yticks(range(len(df.index)), df.index)
+
+# Füge Beschriftungen für die Achsen und den Titel hinzu
+plt.xlabel('Category')
+plt.ylabel('Row')
+plt.title('Simple Heatmap Example')
+
+# Annotieren der Heatmap
+for i in range(df.shape[0]):
+    for j in range(df.shape[1]):
+        plt.text(j, i, df.iloc[i, j], ha='center', va='center', color='white')
+
+plt.show()
+``` 
+
+### Beispiel anhand des RTV-Datensatzes 
+
+In dieser Heatmap wird die Anzahl der Fälle pro Jahr und Target Group der Angriffe visualisiert, wodurch man schnell erkennen kann, in welchen Kategorien und Zeiträumen die meisten Ereignisse aufgetreten sind. 
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dateipfad 
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Excel-Datei einlesen 
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Gruppiere die Daten nach Jahr und Zielgruppe und zähle die Vorkommen
+grouped_df = df.groupby(['year', 'grouped_target_group']).size().unstack(fill_value=0)
+
+# Erstelle eine Heatmap
+plt.figure(figsize=(12, 8))
+plt.imshow(grouped_df, cmap='plasma', aspect='auto')
+
+# Füge Farbbalken hinzu
+plt.colorbar(label='Count')
+
+# Setze die Achsenbeschriftungen
+plt.xticks(range(len(grouped_df.columns)), grouped_df.columns, rotation=45)
+plt.yticks(range(len(grouped_df.index)), grouped_df.index)
+
+# Füge Beschriftungen für die Achsen und den Titel hinzu
+plt.xlabel('Grouped Target Group')
+plt.ylabel('Year')
+plt.title('Heatmap of Target Groups per Year')
+
+# Annotieren der Heatmap
+for i in range(grouped_df.shape[0]):
+    for j in range(grouped_df.shape[1]):
+        plt.text(j, i, grouped_df.iloc[i, j], ha='center', va='center', color='white')
+
+plt.show()
+``` 
+

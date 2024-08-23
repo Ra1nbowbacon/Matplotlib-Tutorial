@@ -1,0 +1,127 @@
+---
+title: "Datensatz bereinigen"
+---
+Jede Datenbereinigung stellt letztlich einen Eingriff in die Daten und damit eine Manipulation derselben dar. 
+Datenbereinigung ist dennoch in den meisten Fällen unerlässlich, zum Beispiel, wenn Datensätze Inkonsistenzen und Unvollständigkeiten aufweisen. Wir nennen sie dann [dirty data](https://en.wikipedia.org/wiki/Dirty_data). In den folgenden Abschnitten werden wir lernen, dirty data in nutzbare Daten zu verwandeln. Dabei ist jedoch der Umgang mit Leerstellen oder Formatierungsfehlern weniger problematisch als der Umgang mit Ungereimtheiten in den Daten. Hier ist es besonders wichtig, die einzelnen Schritte unserer Datenbereinigung zu reflektieren und zu dokumentieren um sie dadurch für nachnutzende Forschung transparent zu halten. 
+
+___
+### Ausreißer
+Ungereimtheiten in den Daten können zum Beispiel sogenannte *Ausreißer* sein. Das sind Extremwerte innerhalb der Daten. Mitunter resultieren sie aus Messfehlern, ungleicher Datenerfassung oder Formatierungsfehlern. 
+In unserem Beispiel gibt es auch einen Extremwert. Doch es handelt sich nicht um einen Fehler. Die Zahl von über 200 Opfern bei einer einzigen Attacke, die sich in Norwegen im Jahr 2011 ereignete, geht auf den rechtsextremen Anschlag auf der Insel Utoya zurück. Hier müssen wir also entscheiden, ob wir diesen Wert in unsere Berechnungen einbeziehen, oder ob wir ihn (begründet) aussortieren.
+
+```{python}
+# pandas laden und Datensatz einlesen
+import pandas as pd
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+```
+```{python}
+# den Index des Extremwerts ermitteln:
+# alle nicht-numerischen Werte werden mit dem Wert '0' ersetzt.
+df['n_wounded'] = pd.to_numeric(df['n_wounded'], errors='coerce').fillna(0).astype(int)
+# den Datensatz sortieren
+df.sort_values(by='n_wounded', ascending=False).head(2)
+```
+<br><br>
+Mit idxmax() können wir sehr leicht den Index des höchsten Wertes einer Spalte zurückgeben lassen und die entsprechende Zeile anschließend löschen.
+
+```{python}
+max_row_index = df['n_wounded'].idxmax()
+df_dropped_max = df.drop(max_row_index)
+df_dropped_max.sort_values(by='n_wounded', ascending=False).head(2)
+```
+___
+### Inkonsistenzen
+Für Inkonsistenzen in einem Datensatz kann es vielfältige Gründe geben. Datensätze werden oft über Jahre oder Jahrzehnte hinweg gepflegt, während dieser Zeit kann sich die Art der Datenerfassung mehrfach ändern. Aber auch Formatierungsfehler oder Tippfehler können zu inkonsistenten Daten führen.
+Wenn wir Inkonsistenzen bereinigen, müssen wir uns für eine Darstellungsart entscheiden (zum Beispiel für ein Maßsystem) und den Rest der Daten entsprechend anpassen, unsere Entscheidungen sollten wir nachvollziehbar dokumentieren.
+
+Mit der Funktion unique() können wir uns die unterschiedlichen Werte einer Spalte anzeigen lassen.
+
+```{python}
+unique_values = df['fatal'].unique()
+print(unique_values)
+```
+___
+### NaN Werte
+Um NaN-Werte, also Leerstellen im Datensatz, zu finden können wir die Funktion isnull() nutzen.
+Zum Löschen vom Spalten und/ oder Zeilen steht die Funktion drop() zur Verfügung. dropna() ermöglicht zudem das Löschen der kompletten Zeile, die NaN-Werte enthält.
+
+
+```{python}
+df.isnull()
+# sum() gibt die Summe aller NaN-Werte aus.
+df.isnull().sum()
+
+not_all_NaN_df = df.dropna(how='all') # löscht nur Zeilen in denen alle Werte NaN sind
+not_any_NaN_df = df.dropna(how='any') # löscht auch Zeilen, in denen nur ein Wert NaN ist
+# mit info() erhalten wir eine Übersicht über NaN und nicht NaN Werte 
+not_any_NaN_df.info(5) 
+
+```
+
+<br><br>
+Wenn wir die Zeilen mit NaN-Werten behalten möchten, können wir mit der Funktion fillna() alle gefundenen NaN-Werte durch einen beliebigen Wert ersetzen lassen, zum Beispiel auch mit dem berechneten Mittelwert.
+```{python}
+# für die Übersichtlichkeit wird zunächst ein dictionary erstellt
+values = {"year": df["year"].mean(), 
+          "n_killed": df["n_killed"].mean()} 
+# das dictionary wird als Parameter übergeben
+filled_df = df.fillna(value=values) 
+filled_df.info()
+
+```
+
+___
+### Werte austauschen
+Mit Hilfe der Funktion replace() können wir Werte in unserem DataFrame austauschen.
+```{python}
+# hier erstellen wir eine Kopie unseres Dataframe um das Original später noch verwenden zu können
+replaced_df = df
+replaced_df['case_id']=df['case_id'].str.replace('-','.', regex=False) 
+# der erste Parameter wird durch den zweiten ersetzt
+replaced_df.head()
+
+```
+___
+### Zeilen und Spalten löschen
+Zum Löschen von einzelnen Spalten oder Zeilen können wir drop() verwenden.
+```{python}
+selection_df = df.drop(columns=['description', 'weapon_description'])
+selection_df.head()
+
+```
+
+<br><br>
+ Die Funktion drop_duplicates() löscht alle Zeilen, in denen sich die Werte wiederholen.
+
+
+```{python}
+without_duplicates_df = df.drop_duplicates(
+    subset=['country_name'],
+    keep='first',
+    # keep='first' behält den ersten Wert
+    # keep='last' behält den letzten Wert
+    # Keep=False löscht alle Dubletten
+)
+without_duplicates_df.head(2)
+
+```
+___
+### Werte ändern
+Für manche Operationen kann es nötig werden, den Datentyp einer Spalte oder Zeile zu ändern. In unserem Beispiel möchten wir sicherstellen, dass alle Werte der Spalte 'year' als String vorliegen und nicht numerisch sind. Mit der Funktion info() lassen wir uns zunächst anzeigen, welchen Typ die Daten in den verschiedenen Spalten haben. Mit astype() ändern wir anschließend den Datentyp.
+
+```{python}
+df['country_id'].info()
+changed_type_df = df
+changed_type_df['country_id']=df['country_id'].astype('str')
+print('\n**** Der type int64 wird zu nach der Umwandlung zu object ****\n')
+changed_type_df['country_id'].info()
+```
+<br><br>
+Mit rename() lassen sich Spalten- und Zeilennamen ändern.
+
+```{python}
+renamed_df = df.rename(columns = {'year':'Jahr'})
+renamed_df.head(2)
+```
+
+

@@ -1,0 +1,6 @@
+---
+title: "Lizenz"
+---
+Für die Materialien auf dieser Website werden [CC BY 4.0](https://de.wikipedia.org/wiki/Creative_Commons) Nutzungsrechte bereitgestellt. Sie erhalten dadurch das Recht, die Materialien unentgeltlich zu nutzen und weiterzuverwenden, sofern Sie die Herkunft entsprechend zitieren.
+
+Bitte zitieren Sie diese Lernressource wie folgt: Brandner, Lisa; Jurk, Inka; Mauermann, Johanna: *Daten sichtbar machen. Einführung in die Datenvisualisierung mit Python*, Johannes-Gutenberg-Universität Mainz 2024.

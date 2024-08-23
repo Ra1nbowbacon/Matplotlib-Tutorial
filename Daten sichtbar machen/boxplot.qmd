@@ -1,0 +1,98 @@
+---
+title: "Box Plots"
+format:
+  html:
+    code-fold: true
+jupyter: python3 
+---
+
+Ein Boxplot, auch bekannt als Kastendiagramm, ist ein statistisches Diagramm, das die Verteilung numerischer Daten darstellt. Es hebt die wichtigsten Quartile der Daten hervor und zeigt potenzielle Ausreißer auf. Boxplots sind nützlich, um Unterschiede zwischen mehreren Gruppen oder Datensätzen zu vergleichen und bieten eine schnelle visuelle Einschätzung der Verteilung, Symmetrie und Streuung der Daten.
+
+___
+### Bestandteile eines Boxplots 
+
+- __Box:__ Der Bereich zwischen dem ersten Quartil (Q1) und dem dritten Quartil (Q3) wird als Box dargestellt. Dieser Bereich, auch als Interquartilsabstand (IQR) bezeichnet, umfasst die mittleren 50% der Daten.
+- __Median:__ Eine Linie innerhalb der Box zeigt den Median (Q2) der Daten an, also den mittleren Wert, wenn die Daten sortiert sind.
+- __Whiskers:__ Die "Whiskers" sind Linien, die von der Box nach außen verlaufen. Sie erstrecken sich bis zum Minimum und Maximum der Daten innerhalb einer bestimmten Grenze, typischerweise 1,5-mal des IQR.  
+- __Ausreißer:__ Datenpunkte, die außerhalb des Whiskers liegen, werden oft als individuelle Punkte dargestellt und gelten als potenzielle Ausreißer. 
+
+___
+### Einfaches Beispiel für einen Boxplot 
+
+```{python}
+import matplotlib.pyplot as plt
+
+# Beispiel-Daten
+data = [7, 8, 9, 5, 6, 8, 7, 5, 4, 8, 9, 6, 5, 8, 7]
+
+# Boxplot erstellen
+plt.boxplot(data)
+
+# Achsenbeschriftungen und Titel hinzufügen (optional)
+plt.xlabel('Sample Data')
+plt.ylabel('Values')
+plt.title('Simple Boxplot Example')
+
+# Plot anzeigen
+plt.show()
+``` 
+
+### Beispiel anhand des RTV-Datensatzes 
+
+Im folgenden Beispiel werden Unterschiede in der Verteilung tödlicher und nicht-tödlicher Fälle über die Jahre hinweg für die verschiedenen Länder untersucht: 
+
+``` {python} 
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dateipfad zur Excel-Datei
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Lese Excel-Datei ein
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Erstelle ein Plot-Objekt mit einer spezifischen Größe
+fig, ax = plt.subplots(figsize=(15, 6))
+
+# Definiere Farben für die Boxplots: Blau für nicht-tödliche (0), Rot für tödliche (1) Fälle
+colors = {0: 'blue', 1: 'red'}
+
+# Liste aller Länder aus der 'country_name'-Spalte
+countries = df['country_name'].unique()
+
+# Durchlaufe alle Länder
+for country in countries:
+    # Durchlaufe alle eindeutigen Werte in der 'fatal'-Spalte (0 oder 1)
+    for fatal in df['fatal'].unique():
+        # Filtere die Daten für das aktuelle Land und den aktuellen 'fatal'-Wert
+        subset = df[(df['country_name'] == country) & (df['fatal'] == fatal)]
+        
+        # Berechne die Position für den Boxplot:
+        # - Index des Landes in der Liste + 0.2 für tödliche Fälle, -0.2 für nicht-tödliche Fälle
+        positions = [list(countries).index(country) + (0.2 if fatal == 1 else -0.2)]
+        
+        # Erstelle den Boxplot für das gefilterte Daten-Subset
+        ax.boxplot(subset['year'], positions=positions, widths=0.4, patch_artist=True,
+                   boxprops=dict(facecolor=colors[fatal], color=colors[fatal]),
+                   medianprops=dict(color='yellow'), showfliers=True,
+                   flierprops=dict(markerfacecolor=colors[fatal], marker='o', markersize=12, linestyle='none'))
+
+# Setze die X-Achsen-Ticks auf die Anzahl der Länder
+ax.set_xticks(range(len(countries)))
+# Setze die X-Achsen-Beschriftungen auf die Länderliste, rotiert um 45 Grad
+ax.set_xticklabels(countries, rotation=45)
+
+# Setze den Titel und die Beschriftungen für die Achsen
+ax.set_title('Boxplot: Fatal and Non-Fatal Cases by Country and Year')
+ax.set_xlabel('Country')
+ax.set_ylabel('Year')
+
+# Erstelle eine Legende mit den Farben und Beschriftungen für tödliche und nicht-tödliche Fälle
+ax.legend(handles=[plt.Line2D([0], [0], color=color, lw=4) for color in colors.values()],
+          labels=['Non-Fatal', 'Fatal'])
+
+# Zeige den Plot
+plt.show()
+``` 
+
+

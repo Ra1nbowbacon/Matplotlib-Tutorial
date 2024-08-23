@@ -1,0 +1,11 @@
+--- 
+title: "Fragen an Datensatz formulieren"
+--- 
+
+Wir haben den Datensatz ausgewählt und erfolgreich eingelesen. Aber wie geht es weiter? Man steht vor einem großen Datenberg und fragt sich nun wahrscheinlich: *Was* genau will man eigentlich visualisieren? Und welche Schritte sind nötig, um dorthin zu gelangen? Bevor man überhaupt beginnt, aus einem Datensatz Visualisierungen zu erstellen, ist es essentiell, die richtigen Fragen an den Datensatz zu stellen. Dies ähnelt ein wenig dem Prozess der Themenfindung für eine Hausarbeit: auch hier überlegt man sich besser das Thema, bevor man mit dem Schreiben beginnt, auch wenn sich natürlich im Prozess weitere Ideen ergeben können. 
+Um gezielt Informationen herauszufiltern und darzustellen, sollte man also wissen, welche Fragen man an die Daten hat. 
+Hierfür ist es nötig, dass man den Datensatz schon ein Stück weit kennt, indem man sich zum Beispiel mit pandas die Spaltenüberschriften und ersten Einträge angeschaut hat [hier verlinken zu entsprechendem Kapitel]. Darauf aufbauend kann man sich dann solche Fragen stellen wie: Für welche Spalte(n) interessiere ich mich? Welche Beziehungen zwischen Variablen möchte ich untersuchen? 
+
+Das ist jetzt alles noch etwas unkonkret, daher ein paar Beispiele in Bezug auf unseren Datensatz zu rechter Gewalt: Man könnte sich etwa fragen, in welchem Land es besonders viele Fälle gibt, oder welche Entwicklungen im Laufe der Zeit zu identifizieren sind… [später hier ausbauen/konkretisieren] 
+
+

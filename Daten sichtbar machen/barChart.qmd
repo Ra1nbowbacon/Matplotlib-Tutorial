@@ -1,0 +1,69 @@
+---
+title: "Bar Charts"
+format:
+  html:
+    code-fold: true
+jupyter: python3 
+---
+
+Bar Charts, oder auf deutsch Balkendiagramme, eignen sich besonders für den Vergleich von Kategorien oder Gruppen. Sie ermöglichen, die Größenordnungen verschiedener Kategorien schnell zu erfassen. 
+
+___
+### Grundsätzliche Struktur eines Balkendiagramms  
+
+Das folgende Beispiel zeigt die grundlegende Struktur eines einfachen Balkendiagramms:  
+
+```{python}
+# importiere matplotlib 
+import matplotlib.pyplot as plt
+
+# Daten für das Balkendiagramm
+categories = ['A', 'B', 'C']
+values = [10, 20, 15]
+
+# Erstelle Balkendiagramm 
+plt.bar(categories, values)
+
+# Füge Labels und Titel hinzu
+plt.xlabel('Categories')
+plt.ylabel('Values')
+plt.title('Simple Bar Chart')
+
+# Zeige Plot
+plt.show()
+
+```
+
+### Beispiel anhand des RTV-Datensatzes
+
+Wir haben in diesem Beispiel die Frage gestellt, wie insgesamt die Verteilung von tödlichen und nicht tödlichen Fällen ist. Weil wir hier zwei nominale Kategorien haben (tödlich und nicht-tödlich), eignet sich für diese Darstellung ein Balkendiagramm gut. 
+
+```{python}
+import pandas as pd 
+import matplotlib.pyplot as plt
+
+# Dateipfad
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Lese Excel-Datei ein 
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Gruppiere Daten
+fatal_counts = df['fatal'].value_counts()
+
+#Erstelle Balkendiagramm
+plt.bar(fatal_counts.index.map({0: 'nicht tödlich', 1: 'tödlich'}), fatal_counts.values)
+
+# Füge Beschriftungen und Titel hinzu
+plt.xlabel('Fälle')
+plt.ylabel('Anzahl')
+plt.title('Vergleich von tödlichen und nicht tödlichen Fällen')
+
+# Zeige Diagramm
+plt.show()
+```
+
+Im Beispiel wird deutlich, dass nur ein kleiner Teil der verzeichneten Fälle tödlich war. Diese Art der Visualisierung hilft dabei, schnell zu erfassen, wie häufig bestimmte Ereignisse im Vergleich zu anderen auftreten.
+
+
+

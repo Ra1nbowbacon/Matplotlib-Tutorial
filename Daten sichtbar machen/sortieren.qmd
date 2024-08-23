@@ -1,0 +1,150 @@
+---
+title: "Datensätze verbinden"
+---
+
+In diesem Abschnitt steigen wir in die fortgeschrittene Datenverarbeitung ein. Die Verbindung von Datensätzen in pandas erfolgt nach zwei unterschiedlichen Prinzipien. Entweder können wir die Daten unseres ersten Datensatzes auf die Daten unseres zweiten Datensatzes mappen. Oder wir hängen die Daten des ersten Datensatzes an den zweiten an. 
+Dabei stehen zwei Richtungen zur Verfügung: horizontal (axis=1) und vertikal (axis=0). 
+Die Funktionen merge() mappt die Daten horizontal. Die Funktion concat() hängt die Daten aneinander an. Das kann sie sowohl horizontal als auch vertikal. 
+
+Anfangs kann es verwirrend sein, dass horizontale und vertikale Zusammenführung nicht derselben Logik folgen. Während wir mit einem horizontalen merge() in die Struktur der Datensätze eingreifen, hängen wir mit concat() die Datensätze lediglich aneinander an. 
+Eine umfangreiche Dokumentation zu diesem Thema findet sich auf der Website [realpython](https://realpython.com/pandas-merge-join-and-concat/).
+
+___
+### Verbindungslogik
+Aus SQL ist die folgende Verbindungslogik bekannt, die auch bei pandas zur Anwendung kommt, wir sollten sie uns daher gut einprägen:
+
+![](img/join_sql.jpg)
+
+Inner Join liefert einen Dataframe zurück, der lediglich die Daten enthält, die in beiden Datensätzen identisch vorhanden sind. Outer Join dagegen liefert alle Daten zurück. Dadurch entsteht eine Tabelle, die alle Spalten aus beiden Datensätzen enthält. Wenn ein Wert aus dem ersten Datensatz nicht auf den zweiten gemappt werden kann, wird diese Stelle in der Tabelle mit einem NaN-Wert gefüllt. 
+Left und Right Join behalten jeweils einen Teil der Daten und verfahren im Übrigen wie Outer Join.
+
+
+___
+### Horizontale Verflechtung
+Die Funktion merge() mappt die Daten des ersten Datensatzes auf die Daten des zweiten. Die "kleine Schwester" von merge() ist die Funktion join(). Diese Funktion ist weniger mächtig, reicht aber für viele Zwecke bereits aus.
+
+
+```{python}
+import pandas as pd
+# Erstellen zweier Beispieldatensätze:
+my_df1 = pd.DataFrame({
+    'nummer': [1, 2, 3, 4],
+    'value': ['Apple', 'Orange', 'Lemon', 'Banana'],
+    'equal_column': ['A', 'B', 'C', 'D'],
+    'df1_column': [7, 8, 9, 10]
+
+})
+
+my_df2 = pd.DataFrame({
+    'nummer': [1, 1, 2, 3],
+    'value': ['Apple', 'Orange', 'Pear', 'Banana' ],
+    'equal_column': ['A', 'B', 'C', 'D'],
+    'df2_column': [7, 8, 9, 10]
+})
+
+my_df1.merge(my_df2)
+```
+
+<br><br>
+Wie wir sehen, liefert die Funktion einen Dataframe zurück, der nur aus einer einzigen Zeile besteht: die Zeile, in der die Werte identisch sind, denn per default verbindet die Funktion merge() zwei Datensätze als Inner Join. Wir können der Funktion merge() aber auch mitteilen, anhand welcher Spalte sie unsere Dataframes verbinden soll.
+
+```{python}
+my_df1.merge(my_df2, on= 'nummer')
+```
+<br><br>
+
+Nun sehen wir, dass wir einen Dataframe zurückgeliefert bekommen, der doppelte Werte enthält. Die 'nummer' mit Wert '1' ist zwei Mal vorhanden, da jede der Spalten aus my_df1 auf die Spalten des my_df2 gemappt wurde. 
+Pandas hängt an die Spaltennamen, die in den Dataframes identisch sind, ein _x und _y an. Diese default Werte können wir anpassen, indem wir den Parameter `suffixes=['my_suffix1', 'my_suffix2']` übergeben.
+
+Als nächstes verbinden wir unsere Dataframes mit einem Outer Join und sehen, dass die Stellen in der Tabelle, für die keine übereinstimmenden Daten gefunden werden können, mit NaN-Werten gefüllt werden.
+
+```{python}
+my_df1.merge(my_df2, on= 'nummer', how='outer')
+```
+
+
+___
+### Vertikale und horizontale Verkettung
+Die Funktion concat() kann Daten sowohl vertikal (axis=0, per default) als auch horizontal (axis=1) verketten. Der Unterschied zu merge() ist jedoch, dass die Daten lediglich angehängt werden. Auch concat() hat eine weniger mächtige "kleine Schwester", die Funktion append().
+
+Die Funktion concat() konkateniert zwei Dataframes. Sie erweitert also unsere Tabelle und hängt den zweiten Dataframe an den ersten an. 
+
+```{python}
+# durch ignore_index=True wird der Index neu gesetzt
+pd.concat([my_df1, my_df2], ignore_index=True)
+```
+
+<br><br>
+
+Wir können die Funktion concat() auch mit einem Inner Join verwenden, dadurch werden nur die Zeilen und Spalten zurückgeliefert, für die identische Werte in beiden Dataframes existieren.
+
+```{python}
+pd.concat([my_df1, my_df2], join='inner', ignore_index=True)
+
+```
+
+<br><br>
+
+Wir können eine merge ähnliche Ansicht durch die horizontale Verkettung erwirken, aber auch hier werden die Daten lediglich angehängt und nicht gemapped.
+
+```{python}
+pd.concat([my_df1, my_df2], axis=1)
+```
+
+___
+### Funktionale Programmierung verwenden
+In unserem Beispiel möchten wir nun einen demographischen Datensatz (df2) mit unserem Right-Wing-Terrorism and Violence-Dataset (df1) verbinden. Wir möchten noch eine weitere Spalte an die Tabelle anfügen, die für jedes Jahr und für jedes Land die entsprechende Einwohnerzahl auflistet.  
+Schauen wir uns zunächst beide Datensätze an:
+
+```{python}
+import pandas as pd
+df1 = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+# die Daten im zweiten Datensatz liegen als Tab Separated Value vor. Diese Information geben wir beim Einlesen an.
+df2 = pd.read_csv('democraphics_2014-2023.tsv', sep='\t') 
+df2.head()
+```
+<br><br>
+Offensichtlich lassen sich die beiden Datensätze sehr gut über die Spalten 'country_name' (df1) und 'geo' (df2) verbinden, denn hier besitzen sie identische Werte.
+
+```{python}
+# die Werte von df2 sollen nun als neue Spalten rechts an die bestehende Tabelle angehängt werden.
+merged_df = pd.merge(df1, df2, left_on='country_name', right_on='geo', how='inner')
+# Mit Hilfe einer Funktion spezifizieren wir: greife nur auf diejenigen Werte in df2 zu, 
+# für die in der Spalte 'year' aus df1 ein identischer Wert gefunden wurde.
+# Die Zeilen, für die kein Wert gefunden wurde, werden mit 'None' gefüllt.
+def get_mapped_value(row):
+    column_name = str(row['year'])  # Jahr in String umwandeln, um Spaltennamen abzugleichen
+    if column_name in row:
+        return row[column_name]
+    else:
+        return None
+
+# mit dem Parameter 'axis=1' geben wir an, dass die Werte Reihenweise gemappt werden sollen.
+# 'axis=0' würde dagegen die Spalten mappen.
+# anschließend wenden wir die Funktion auf jede Zeile an, 
+# um die neue Spalte 'mapped_population' zu erstellen
+merged_df['mapped_population'] = merged_df.apply(get_mapped_value, axis=1)
+
+# Unnötige Spalten entfernen
+merged_df.drop(columns=['geo'] + [str(year) for year in range(2014, 2024)], inplace=True)
+merged_df.tail()
+```
+
+<br><br>
+Mit Hilfe einer lambda-Funktion verkürzt sich die Syntax noch einmal erheblich und wird übersichtlicher:
+
+```{python}
+merged_df = pd.merge(df1, df2, left_on='country_name', right_on='geo', how='inner')
+# lamda
+merged_df['mapped_value'] = merged_df.apply(lambda row: row[str(row['year'])] if str(row['year']) in merged_df.columns else None, axis=1)
+```
+
+<br><br>
+
+Zuletzt können wir uns noch dafür entscheiden die Spalte 'geo' aus unserem 'df2' zu behalten, um unseren Dataframe übersichtlicher zu machen. In diesem Fall löschen wir alle Spalten aus 'df2', außer der ersten.
+
+```{python}
+# Alle Spalten aus 'df2' außer der ersten löschen
+merged_df.drop(columns=df2.columns[1:], inplace=True)
+merged_df.tail()
+```

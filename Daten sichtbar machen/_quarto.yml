@@ -1,0 +1,68 @@
+project:
+  type: website
+
+website:
+  title: "![logo](img/logo.png){height=50px}"
+  page-navigation: true
+    
+  navbar:
+    left:
+      - href: index.qmd
+        text: "Startseite"
+      - about.qmd
+      - datensatz.qmd
+      - quellen.qmd
+      
+
+  sidebar:
+    style: "floating"
+    alignment: "left" 
+    contents: 
+    - einfuehrung.qmd 
+
+    - section: kapitel1.qmd
+      contents:
+      - einlesen.qmd
+      - ueberblick.qmd
+
+      - pandas.qmd
+      - sortieren.qmd
+
+    - section: kapitel4.qmd
+      contents:
+      - linePlot.qmd 
+      - barChart.qmd 
+      - pieChart.qmd
+      - scatterPlot.qmd
+      - histogramm.qmd
+      - boxplot.qmd
+      - heatmap.qmd
+
+
+    - section: Gestaltung.qmd
+      contents: 
+      - achsen_groesse.qmd
+      - formen_linien.qmd
+      - farben.qmd
+      - text.qmd
+      - ueberlappungen.qmd
+
+  page-footer:
+    center:
+      - text: "Impressum"
+        href: impressum.qmd
+      - text: "Datenschutz"
+        href: datenschutz.qmd
+      - text: "Lizenz"
+        href: lizenz.qmd
+      
+
+format:
+  html:
+    theme: sandstone
+    css: styles.css
+    toc: true
+
+  
+
+

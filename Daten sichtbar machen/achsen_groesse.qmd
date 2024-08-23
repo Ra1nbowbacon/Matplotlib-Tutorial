@@ -1,0 +1,148 @@
+---
+title: "Achsenanpassungen"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+Um Daten anschaulich darzustellen, brauchen wir meistens eine x- und eine y-Achse. Dabei verläuft die x-Achse waagerecht und die y-Achse senkrecht, gemeinsam bilden diese unser Koordinatensystem. Wie man diese Achsen anpassen kann, lernen wir jetzt in diesem Abschnitt. 
+
+___
+### Wahl des Achsenbereichs
+
+Eine sinnvolle Wahl des Achsenbereichs ist sehr wichtig. Der darzustellende Bereich wird von matplotlib auf beiden Achsen automatisch gewählt, aber wir können, je nachdem, was wir in unseren Visualisierungen zeigen wollen, auch festlegen, wie weit diese Achsen reichen. Dann wird alles, was außerhalb dieses Bereichs liegt, nicht angezeigt. 
+
+Mit der Funktion `plt.xlim(left, right)` kann der Bereich auf der x-Achse und mit `plt.ylim(bottom, top)` der Bereich auf der y-Achse festgelegt werden. 
+
+```{python}
+#| label: fig-xlim
+#| fig-cap: "Anzahl der Attacken pro Jahr in Deutschland mit xlim()"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+# Filtern der Daten für Deutschland
+df_germany = df[df['country_name'] == 'Germany']
+
+# Zählen der Angriffe pro Jahr
+attacks_per_year = df_germany.groupby('year').size().reset_index(name='attack_count')
+
+# Erstellen des Balkendiagramms
+plt.figure(figsize=(7, 5))
+bars = plt.bar(attacks_per_year['year'], attacks_per_year['attack_count'], color='coral')
+
+#Anpassen der Achseneinteilung, die Nachkommastelle ist für eine bessere Darstellung der Balken
+plt.xlim(1999.5, 2022.5)
+
+# Hinzufügen von Beschriftungen und Titel
+plt.ylabel('Anzahl der Attacken')
+plt.xlabel('Jahre')
+plt.suptitle('Attacken pro Jahr in Deutschland', fontsize=20)
+plt.title('Angepasster Achsenbereich')
+
+# Anzeigen des Diagramms
+plt.tight_layout()
+plt.show()
+```
+
+Das Beispiel in @fig-xlim zeigt uns die Anzahl der Angriffe pro Jahr in Deutschland. Dabei haben wir die x-Achse mithilfe von `plt.xlim()` so angepasst, dass wir alle Attacken ab dem Jahr 2000 angezeigt bekommen. 
+
+___
+### Abstände zwischen den Achsenstrichen
+
+Auch die Achseneinteilung wird von matplotlib automatisch gewählt, wir können diese aber genauso individualisieren. So können wir die Abstände zwischen den Strichen anpassen, zum Beispiel alle 2 Jahre: 
+
+```{python}
+#| label: fig-xticks
+#| fig-cap: "Anzahl der Attacken pro Jahr in Deutschland mit xticks()"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+# Filtern der Daten für Deutschland
+df_germany = df[df['country_name'] == 'Germany']
+
+# Zählen der Angriffe pro Jahr
+attacks_per_year = df_germany.groupby('year').size().reset_index(name='attack_count')
+
+# Erstellen des Balkendiagramms
+plt.figure(figsize=(7, 5))
+bars = plt.bar(attacks_per_year['year'], attacks_per_year['attack_count'], color='coral')
+
+#Anpassen der Achseneinteilung, die Nachkommastelle ist für eine bessere Darstellung der Balken
+plt.xlim(1999.5, 2022.5)
+
+#Anpassen der Skalenstriche (alle 2 Jahre)
+plt.xticks(range(2000, 2023, 2))
+
+# Hinzufügen von Beschriftungen und Titel
+plt.ylabel('Anzahl der Attacken')
+plt.xlabel('Jahre')
+plt.suptitle('Attacken pro Jahr in Deutschland', fontsize=20)
+plt.title('Striche alle 2 Jahre')
+
+# Anzeigen des Diagramms
+plt.tight_layout()
+plt.show()
+```
+<br><br>
+
+Mit den Funktionen `plt.xticks()` und `plt.yticks()` kann die Position von Achsenstrichen angepasst werden. Als Argument brauchen diese Funktion jeweils ein `Array` oder eine `Liste` mit der gewünschten Position der Skaleneinteilung. Hier in @fig-xticks haben wir der Funktion `plt.xticks()` das Argument `range(2000, 2023, 2)` übergeben, was bedeutet, dass alle 2 Jahre die Jahreszahl zwischen 2000 und 2023 als Strich erscheint.
+ 
+___
+### Unbeschriftete Achsenstriche
+
+Was auch sehr praktisch sein kann, sind zusätzliche unbeschriftete Striche zwischen zwei Haupt-Achsenstrichen. Diese können wir einfach durch `plt.minorticks_on()` hinzufügen. Diese Striche erscheinen dann sowohl auf der y- als auch auf der x-Achse: 
+
+```{python}
+#| label: fig-minorticks
+#| fig-cap: "Anzahl der Attacken pro Jahr in Deutschland mit minorticks_on()"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+# Filtern der Daten für Deutschland
+df_germany = df[df['country_name'] == 'Germany']
+
+# Zählen der Angriffe pro Jahr
+attacks_per_year = df_germany.groupby('year').size().reset_index(name='attack_count')
+
+# Erstellen des Balkendiagramms
+plt.figure(figsize=(7, 5))
+bars = plt.bar(attacks_per_year['year'], attacks_per_year['attack_count'], color='coral')
+
+#Anpassen der Achseneinteilung, die Nachkommastelle ist für eine bessere Darstellung der Balken
+plt.xlim(1999.5, 2022.5)
+
+#Anpassen der Skalenstriche (alle 2 Jahre)
+plt.xticks(range(2000, 2023, 2))
+
+#Hinzufügen von unbeschrifteten Strichen auf beiden Achsen
+plt.minorticks_on()
+
+#Setzen der unbeschrifteten Striche pro Balken auf der x-Achse
+plt.gca().xaxis.set_minor_locator(plt.MultipleLocator(1))
+
+# Hinzufügen von Beschriftungen und Titel
+plt.ylabel('Anzahl der Attacken')
+plt.xlabel('Jahre')
+plt.suptitle('Attacken pro Jahr in Deutschland', fontsize=20)
+plt.title('Mit unbeschrifteten Strichen')
+
+# Anzeigen des Diagramms
+plt.tight_layout()
+plt.show()
+```
+
+Damit die Striche auch pro Balken erscheinen und nicht irgendwo dazwischen, haben wir in @fig-minorticks noch die Zeile `plt.gca().xaxis.set_minor_locator(plt.MultipleLocator(1))` zusätzlich zu `plt.minorticks_on()` hinzugefügt. Das sorgt dafür, dass die sogenannten "minor-ticks" pro Jahr zwischen den Hauptstrichen erscheinen. 
+

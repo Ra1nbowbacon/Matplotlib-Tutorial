@@ -1,0 +1,36 @@
+---
+title: "Einführung"
+---
+
+Willkommen zu unserem Kurs "Daten sichtbar machen", der in die spannende Welt der Datenvisualisierung einführt, insbesondere mit Python und der beliebten Bibliothek matplotlib. Gemeinsam wollen wir Schritt für Schritt anhand eines tatsächlichen Datensatzes die Grundprinzipien der Datenvisualisierung lernen und die Herausforderungen in den Blick nehmen, die bei der Arbeit mit geisteswissenschaftlichen Daten entstehen können. [Hier](datensatz.qmd) gibt es mehr Infos zu dem Datensatz, den wir verwenden. 
+
+___ 
+### Voraussetzungen 
+
+Der Kurs richtet sich an Anfänger der Datenvisualisierung, einige Grundlagen und technischen Einrichtungen sollten aber mitgebracht (oder vor Beginn des Kurses erarbeitet) werden. 
+
+- Grundkenntnisse in Python
+- Eine Python-Entwicklungsumgebung, z.B. Jupyter Notebook 
+- Installation der Bibliotheken pandas und matplotlib 
+
+Hilfreiche Links gibt es [hier](quellen.qmd).
+
+___ 
+### Warum ist Datenvisualisierung wichtig? 
+
+In unserer heutigen datengetriebenen Welt ist Datenvisualisierung ein unverzichtbares Werkzeug, um komplexe Datenmengen verständlich und anschaulich darzustellen. Sie hilft dabei, Muster, Trends und Ausreißer in den Daten zu erkennen, und ermöglicht eine wirkungsvolle Kommunikation der Ergebnisse. 
+
+___ 
+### Achtung vor schlechten Visualisierungen 
+
+Beim Erstellen von Visualisierungen ist allerdings Vorsicht geboten: Schlechte Visualisierungen sind im harmlosen Fall einfach nur hässlich oder schwer leserlich, im schlimmsten Fall (absichtlich?) irreführend. Dem folgenden Beispiel gelingt sogar das Kunststück, diese Merkmale schlechter Visualisierungen zu vereinen. Es suggeriert - für Menschen mit Rot-Grün-Schwäche völlig unleserlich - eine überwältigende Mehrheit in der Frage, wie viele Menschen Visualisierungen lernen möchten: 
+
+![schlechtes Beispiel](img/badPieChart.png)
+
+Keine Sorge, wir haben keine manipulativen Absichten mit diesem Diagramm, auch wenn wir natürlich hoffen, dass Sie Lust haben zu lernen, wie man gute Datenvisualisierungen erstellt. 
+
+___ 
+### Was macht eine gute Visualisierung aus? 
+
+Eine gute Datenvisualisierung ist, anders als obiges Beispiel, sowohl faktisch korrekt als auch optisch ansprechend, und sollte eine eindeutige Aussage haben, die auf einen Blick verständlich ist. Doch wie erstellt man eine Visualisierung, die all diese Kriterien erfüllt? Das wollen wir in den folgenden Kapiteln in Angriff nehmen, um schrittweise vom Datensatz zur Visualisierung zu kommen und das erklärte Ziel zu erfüllen: Daten sichtbar machen! 
+

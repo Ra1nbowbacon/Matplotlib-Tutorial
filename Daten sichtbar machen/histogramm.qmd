@@ -1,0 +1,65 @@
+---
+title: "Histogramme"
+format:
+  html:
+    code-fold: true
+jupyter: python3 
+---
+Bei einem Histogramm handelt es sich um die grafische Darstellung einer Häufigkeitsverteilung in Form von Säulen, die den Häufigkeiten der Messwerte entsprechen. Von Balkendiagrammen unterscheiden sie sich vor allem in der Art der Daten: Sie kommen bei stetigen, numerischen Daten zum Einsatz, Balkendiagramme hingegen bei kategorialen oder nominalen Daten. Histogramme eignen sich damit besonders für die Darstellung von Häufigkeitsverteilungen, bei denen die Verteilung einer stetigen Variable untersucht werden soll. Für statistische Anwendungen sind sie sehr nützlich, weil sie helfen können, die Mitte und Streuung eines Datensatzes zu erkennen.
+
+### Grundsätzliche Struktur eines Histogramms
+
+Hier ist ein einfaches Beispiel für ein Histogramm, das die Verteilung einer Liste von Zahlen zeigt:
+
+```{python}
+import matplotlib.pyplot as plt
+
+# Beispiel-Daten: Eine kleine Liste von Zahlen
+data = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 6]
+
+# Erstellen des Histogramms
+plt.figure(figsize=(8, 5))
+plt.hist(data, bins=6, edgecolor='black')
+
+# Hinzufügen von Beschriftungen und Titel
+plt.xlabel('Wert')
+plt.ylabel('Häufigkeit')
+plt.title('Einfaches Histogramm-Beispiel')
+
+# Anzeigen des Diagramms
+plt.show()
+```
+
+### Beispiel anhand des RTV-Datensatzes 
+
+In diesem Beispiel analysieren wir die Verteilung der Anzahl der getöteten Personen bei Angriffen im Laufe der Jahre. Diese Art der Analyse kann helfen, Trends oder Muster im Zeitverlauf zu erkennen.
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dateipfad
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Lese Excel-Datei ein
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Filtern der Daten für tödliche Fälle (n_killed > 0)
+df_fatal = df[df['n_killed'] > 0]
+
+# Aggregieren der Daten: Summe der 'n_killed' pro Jahr
+yearly_killed = df_fatal.groupby('year')['n_killed'].sum()
+
+# Erstellen des Histogramms für die Summe der 'n_killed' pro Jahr
+plt.bar(yearly_killed.index, yearly_killed.values, edgecolor='black')
+
+# Hinzufügen von Beschriftungen und Titel
+plt.xlabel('Jahr')
+plt.ylabel('Anzahl der getöteten Personen')
+plt.title('Verteilung der getöteten Personen nach Jahr')
+
+# Anzeigen des Diagramms
+plt.show()
+```
+

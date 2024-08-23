@@ -1,0 +1,18 @@
+---
+title: "Über die Website"
+
+
+---
+
+Auf dieser Website wird in die Datenvisualisierung mit Python eingeführt. Die Einführung richtet sich an Studierende mit geringer bis keiner Vorerfahrung und ist speziell für Anwendungsfälle im geisteswissenschaftlichen Forschungskontext konzipiert.
+
+Vorgestellt werden die Python Bibliotheken:
+
+- [pandas](https://pandas.pydata.org/) zur Datenverarbeitung 
+- [matplotlib](https://matplotlib.org/) zur Visualisierung
+
+Um die vorgestellten Methoden zu verstehen, werden Grundkenntnisse in der Programmiersprache Python vorausgesetzt. Bei Python handelt es sich um eine höhere Programmiersprache, die jedoch als einsteigerfreundlich und leicht zu erlernen gilt. Für Python stehen zahlreiche online Tutorials zur Verfügung. Einen Einstieg bietet zum Beispiel die Lernplattform [w3schools](https://www.w3schools.com/python/).
+
+___
+
+Enstanden ist diese Website im Kontext des Seminars *Erarbeitung Schulungsmaterialien*, das, unter Leitung von [Dr. Franziska Klemstein](https://i3mainz.hs-mainz.de/team/franziskaklemstein/), im Sommersemester 2024 an der [Johannes-Gutenberg-Universität Mainz](https://www.uni-mainz.de/) stattfand.

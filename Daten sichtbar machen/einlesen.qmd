@@ -1,0 +1,75 @@
+---
+title: "Datensatz einlesen"
+format:
+  html:
+    code-fold: false
+jupyter: python3 
+---
+
+Bevor wir unsere Forschungsfragen an den Datensatz richten und mit den ersten Visualisierungen beginnen, müssen wir uns mit den Daten selbst beschäftigen. Zum Einlesen unserer Datensätze nutzen wir in Python die Bibliothek pandas.
+
+___
+### Pandas laden und Dataframe einlesen
+Da die pandas Bibliothek nicht in den Standardbibliotheken von Python enthalten ist, muss sie zunächst nachgeladen werden:
+
+```{python}
+# Die pandas Bibliothek muss nachgeladen werden:
+import pandas as pd
+```
+
+Anschließend können die Daten eingelesen werden. Pandas kann alle tabellarischen Datenformate einlesen, in unserem Beispiel handelt es sich um eine Excel-Datei.
+Diese Excel-Datei überführen wir mit Hilfe von pandas in einen Dataframe (im Folgenden *df* genannt).
+
+```{python}
+
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx') 
+# wenn sich das Dokument nicht im Projektordnder befindet, 
+# muss an dieser Stelle der komplette Pfad angegeben werden.
+```
+
+___
+### Überblick über die Daten
+Mit den Funktionen head() und tail() können wir uns anzeigen lassen, ob der Import der Daten tatsächlich funktioniert hat. Dabei zeigt head() uns die ersten und tail() die letzten Einträge der Tabelle an.
+
+```{python}
+# als Parameter können wir die Anzahl der Zeilen übergeben, 
+# die wir angezeigt bekommen wollen.
+df.head(2)
+```
+
+___
+### Überblick über die Formatierung
+Einen Überblick über die Formatierung der einzelnen Spalten verschaffen wir uns mit der Funktion info(). Sie gibt für jede Spalte die Summe der Einträge mit NaN (= "Not a Number", also nicht-definierte oder nicht-darstellbare Werte) und nicht-NaN Werten sowie das Datenformat aus.
+
+```{python}
+df.info()
+```
+
+___
+### Überblick über die Statistik
+Für statistische Erhebungen stehen in pandas zahlreiche Funktionen zur Verfügung. Mit describe() können wir uns statistische Berechnungen ausgeben lassen. Für jede Spalte mit numerischem Datentyp erhalten wir die folgenden Angaben:
+
+__count:__ die Anzahl der nicht-NaN Werte
+
+__mean:__  den Mittelwert
+
+__std:__   die Standardabweichung
+auf diese Spalten
+
+__min:__   der kleinsten Wert. Der Wert, unter dem 0% der gesamten Werte liegen
+
+__25%:__   0,25-Quantil. Der Wert, unter dem 25% der gesamten Werte liegen
+
+__50%:__   0,50-Quantil. Der Wert, unter dem 50% der gesamten Werte liegen
+
+__75%:__   0,75-Quantil. Der Wert, unter dem 75% der gesamten Werte liegen
+
+__max:__   der größten Wert. Der Wert, unter dem 100% der gesamten Werte liegen
+
+```{python}
+df.describe()
+```
+<br><br>
+Wie wir sehen, ist die Ausgabe für unser Beispiel wenig aussagekräftig, da die meisten numerischen Werte in unseren Daten nicht sinnvoll akkumuliert werden können.
+
+

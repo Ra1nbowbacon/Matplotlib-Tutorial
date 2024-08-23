@@ -1,0 +1,258 @@
+---
+title: "Überlappungen vermeiden"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+Hat man eine Visualisierung erstellt, sollte man sie sich immer nochmal genau anschauen und prüfen, ob sich Elemente überlappen und ob die Lesbarkeit eingeschränkt ist.
+
+Es ist immer schöner, wenn es möglichst keine verdeckten Datenpunkte gibt. Doch wenn wir große Datensätze visualisieren wollen, lässt es sich manchmal nicht so einfach vermeiden, dass Punkte übereinander liegen und sich überlappen. Selbst in kleineren Datensätzen kann das schon passieren, wenn Daten nicht präzise genug aufgezeichnet wurden und man mit gerundeten Werten arbeitet, sodass es viele Punkte mit genau dem gleichen Wert gibt. Dieses Problem wird auch "overplotting" genannt. 
+
+Zum Glück gibt es einige Strategien, mit denen wir solche Probleme lösen können und die wir in diesem Abschnitt erarbeiten. Dazu gehören: 
+
+- Transparente Datenpunkte
+- Jittering 
+- Small Multiples
+
+___
+### Transparente Datenpunkte
+
+Dieses hier erstelle Scatterplot soll uns die Verteilung der Attacken rechter Gewalt über die Jahre pro Zielgruppe zeigen:
+
+```{python}
+#| fig-cap: "Anzahl der Attacken pro Jahr und Zielgruppe"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+ 
+# Gruppieren nach Jahr und Zielgruppe und Zählen der Vorfälle pro Jahr und Zielgruppe
+incident_counts = df.groupby(['year', 'grouped_target_group']).size().reset_index(name='incident_count')
+ 
+# Scatterplot erstellen
+plt.figure(figsize=(7.5, 6))
+ 
+# Scatterplot für die Anzahl der Vorfälle pro Jahr und Zielgruppe
+for target_group in incident_counts['grouped_target_group'].unique():
+    group_data = incident_counts[incident_counts['grouped_target_group'] == target_group]
+    plt.scatter(
+        group_data['year'],
+        group_data['incident_count'],
+        label=target_group
+    )
+ 
+# Achsenbeschriftungen und Titel hinzufügen
+plt.xlabel('Jahr')
+plt.ylabel('Anzahl der Attacken')
+plt.title('Anzahl der Attacken pro Jahr pro Zielgruppe', fontsize=15)
+plt.legend(title='Zielgruppen', loc="upper left", fontsize=10)
+ 
+# Plot anzeigen
+plt.show()
+
+```
+
+Leider überlappen sich viele Punkte im unteren Bereich, sodass man das Diagramm nur schwer lesen kann. 
+
+Ein effektiver Weg um insbesondere Überlappungen in Scatterplots zu vermeiden, ist die Anpassung der Transparenz von Datenpunkten. Indem wir Punkte teilweise transparent setzen, erscheinen überlappende Bereiche dunkler und geben uns so einen visuellen HInweis darauf, wo Datenpunkte häufig auftreten. 
+
+```{python}
+#| fig-cap: "Anzahl der Attacken pro Jahr und Zielgruppe"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+ 
+# Gruppieren nach Jahr und Zielgruppe und Zählen der Vorfälle pro Jahr und Zielgruppe
+incident_counts = df.groupby(['year', 'grouped_target_group']).size().reset_index(name='incident_count')
+ 
+# Scatterplot erstellen
+plt.figure(figsize=(7.5, 6))
+ 
+# Scatterplot für die Anzahl der Vorfälle pro Jahr und Zielgruppe
+for target_group in incident_counts['grouped_target_group'].unique():
+    group_data = incident_counts[incident_counts['grouped_target_group'] == target_group]
+    plt.scatter(
+        group_data['year'],
+        group_data['incident_count'],
+        alpha=0.5, # Anpassung der Transparenz
+        label=target_group
+    )
+ 
+# Achsenbeschriftungen und Titel hinzufügen
+plt.xlabel('Jahr')
+plt.ylabel('Anzahl der Attacken')
+plt.title('Anzahl der Attacken pro Jahr pro Zielgruppe', fontsize=15)
+plt.legend(title='Zielgruppen', loc="upper left", fontsize=10)
+ 
+# Plot anzeigen
+plt.show()
+
+```
+
+
+Mit dem Parameter `alpha` lässt sich der Grad an Transparenz festlegen, dieser ist ein `float` zwischen 0 und 1. Dabei bedeutet 0 komplett transparent und 1 deckend gefärbt. Hier haben wir `alpha=0.5` gewählt.
+
+___
+### Jittering 
+
+Durch Transparenz lassen sich leider nicht immer alle Probleme lösen und kann es trotzdem noch schwer sein zu erkennen, wie viele Punkte genau übereinander liegen. Einen einfachen Trick, den man hier anwenden kann, ist das sogenannte "Jittering". Dabei werden die Punkte leicht in zufällige Richtungen verschoben, was die Lesbarkeit verbessert. 
+
+```{python}
+#| fig-cap: "Anzahl der Attacken pro Jahr und Zielgruppe"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+#Einlesen des Datensatzes
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+# Gruppieren nach Jahr und Zielgruppe und Zählen der Vorfälle pro Jahr und Zielgruppe
+incident_counts = df.groupby(['year', 'grouped_target_group']).size().reset_index(name='incident_count')
+
+# Scatterplot erstellen
+plt.figure(figsize=(7.5, 6))
+
+# Jitter-Stärke
+jitter_strength = 0.1
+
+# Scatterplot für die Anzahl der Vorfälle pro Jahr und Zielgruppe
+for target_group in incident_counts['grouped_target_group'].unique():
+    group_data = incident_counts[incident_counts['grouped_target_group'] == target_group]
+    jittered_year = group_data['year'] + np.random.uniform(-jitter_strength, jitter_strength, size=len(group_data))
+    jittered_count = group_data['incident_count'] + np.random.uniform(-jitter_strength, jitter_strength, size=len(group_data))
+    plt.scatter(
+        jittered_year,
+        jittered_count, 
+        alpha=0.5,
+        label=target_group
+    )
+
+# Achsenbeschriftungen und Titel hinzufügen
+plt.xlabel('Jahr')
+plt.ylabel('Anzahl der Attacken')
+plt.title('Anzahl der Attacken pro Jahr und Zielgruppe', fontsize=15)
+plt.legend(title='Zielgruppen', loc="upper left", fontsize=10)
+
+# Plot anzeigen
+plt.show()
+```
+
+Hier haben wir dem Scatterplot die Variable `jitter_strength = 0.1` hinzugefügt, die die Stärke des Jitterings bestimmt. Wir können diesen Wert auch anpassen um mehr oder weniger Jittering zu bekommen. 
+
+Für jeden Punkt im Scatterplot wird dann eine zufällige Verschiebung zu den x- und y-Koordinaten hinzugefügt. Dafür benutzen wir `np.random.uniform` um Zufallswerte im Bereich `[-jitter_strength, jitter_strength]` zu erzeugen, die mit den Daten addiert werden. 
+
+Jittering sollte aber immer mit Vorsicht verwendet werden, da es Daten verändert. Jittern wir zu viel, können Punkte an Stellen landen, an die sie nicht hingehören und somit den Datensatz nicht mehr repräsentieren, was irreführend sein kann. 
+
+___
+### Small Multiples 
+
+Auch bei Liniendiagrammen kann es schnell zu Überlappungen kommen, wenn zu viele Kategorien betrachtet werden. 
+
+Dies ist ein Liniendiagramm, das uns zeigen soll, wie viele Attacken es jedes Jahr in verschiedenen Ländern gab, um einen Überblick über die Veränderung im Laufe der Jahre zu erhalten:
+
+```{python}
+#| fig-cap: "Anzahl der Attacken pro Land und Jahr"
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+#Der Datensatz
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+
+# Anzahl der Attacken pro Land und Jahr gruppieren
+attack_counts = df.groupby(['year', 'country_name']).size().reset_index(name='attack_count')
+
+#Liste der Länder aus den Daten extrahieren 
+countries = df['country_name'].unique()
+
+#Größe der Visualisierung
+plt.figure(figsize=(7.5, 6))
+
+# Für jedes Land, plotte die Attacken über die Jahre
+for country in countries:
+    country_data = attack_counts[attack_counts['country_name'] == country]
+    plt.plot(country_data['year'], country_data['attack_count'], label=country)
+
+# Achsenbeschriftungen und Titel hinzufügen
+plt.ylabel('Anzahl der Attacken')
+plt.title('Anzahl der Attacken pro Jahr und pro Land')
+plt.legend(fontsize=8)
+
+# Zeigt das gesamte Diagramm an
+plt.show()
+
+```
+
+Das dabei entstandene Liniendiagramm sieht ziemlich chaotisch aus, da sich alles überschneidet und es zu viele Länder gibt, sodass diese durch die Farben kaum unterschieden werden können. 
+
+Um die Daten lesbarer zu machen eignet sich eine Darstellung mithilfe von "Small Multiples" viel besser, also ein Raster an kleinen einzelnen Diagrammen. 
+
+```{python}
+#| fig-cap: "Anzahl der Attacken pro Land und Jahr"
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+#Der Datensatz
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+
+
+#Small Multiples für Anzahl der Attacken
+import matplotlib.pyplot as plt
+
+#Anzahl der Attacken pro Land berechnen
+attack_counts = df.groupby(['year', 'country_name']).size().reset_index(name='attack_count')
+
+#Liste der Länder aus den Daten extrahieren 
+countries = df['country_name'].unique()
+
+#Anzahl der Länder
+num_countries = len(countries)
+
+#Subplots erstellen
+#Hier erstellen wir ein 6x3 Raster von Subplots, um so ein Plot pro Land zu erhalten
+#sharey= True und sharex=True bedeutet, dass die Achsen zwischen den Plots alle gleich sind
+fig, axes = plt.subplots(6, 3, figsize=(15, 12), sharey= True, sharex = True)
+
+#Flachmachen des 2D-Arrays von Achsen in ein 1D-Array für einfacheren Zugriff
+axes = axes.flatten() 
+
+#Iteriere über jedes Land und erstelle einen separaten Plot
+for i, country in enumerate(countries):
+    country_data = attack_counts[attack_counts['country_name'] == country]
+    axes[i].plot(country_data['year'], country_data['attack_count'], label=country)
+    axes[i].set_title(country)
+    axes[i].set_xlabel('Jahr')
+    axes[i].set_ylabel('Anzahl der Attacken')
+    axes[i].grid(True)
+
+#Überschrift
+plt.suptitle("Anzahl der Attacken pro Jahr und pro Land", fontsize=15)
+plt.title(" ")
+
+#Optimierung des Layouts, um Überlappungen zu vermeiden und die Abstände anzupassen
+plt.tight_layout()
+
+#Zeigt das gesamte Diagramm an
+plt.show()
+
+```
+
+Hier haben wir jetzt mithilfe von `fig, axes = plt.subplots(6, 3, figsize=(20, 15), sharey=True, sharex=True)` ein Raster an kleinen Subplots pro Land erstellt. Die Zahl 6 bedeutet, dass wir 6 Zeilen haben möchten und die 3 ist die Anzahl der gewollten Spalten, da wir 18 verschiedene Länder zeigen möchten. Die Parameter `sharey=True` und `sharex=True` sorgen dafür, dass alle Subplots dieselben Achsen teilen, was den Vergleich erleichtert. Dies hat aber auch Nachteile, wenn es Länder mit besonders niedrigen und Länder mit besonders hohen Werten gibt, es lohnt sich auf jeden Fall beides auszuprobieren. 
+
+Im restlichen Code wird dann mit einer `for-Schleife` für jedes Land ein eigener Plot, mit den jeweiligen Daten und zugehörigen Achsenbeschriftungen, erstellt. Mithilfe von `plt.tight_layout()` können wir dann das Layout anpassen, um ungleichmäßige Abstände zu vermeiden. 
+
+Durch diese Art der Darstellung ist jede Linie klar erkennbar und für jedes Land voneinander getrennt, was Überlappungen vermeidet und die Lesbarkeit der Daten verbessert. 

@@ -1,0 +1,19 @@
+---
+title: "Daten vorbereiten"
+---
+
+Am Anfang jeder Datenvisualisierung stehen die Daten selbst. Häufig liegen sie jedoch in einer Form vor, in der wir nicht ungehindert mit ihnen arbeiten können. Stattdessen ist meist noch viel Arbeit nötig, bevor die erste Visualisierung umsetzbar ist. 
+
+___
+### Open Refine
+Für das Einlesen und Verarbeiten tabellarischer Daten stehen zahlreiche Optionen zur Verfügung. In den Geisteswissenschaften erfreut sich unter anderem die open source Software [OpenRefine](https://openrefine.org/), die einen sinnvollen Kompromiss zwischen nutzerfreundlicher Handhabung und umfangreichen Funktionen bietet, großer Beliebtheit. OpenRefine stellt eine optische click-and-play Umgebung zur Verfügung, bietet eine Verlaufsanzeige, die Möglichkeit Daten über das Web zu akquirieren (reconsiling) und vieles mehr. Aber OpenRefine kann nicht alles, den funktionalen Möglichkeiten sind Grenzen gesetzt. 
+
+___
+### Python Pandas
+Spätestens, wenn andere Softwareangebote nicht mehr weiterkommen, sollten wir an Python denken. Mit Python haben wir eine mächtige Programmiersprache in den Händen, die sich durch einen nutzerfreundlichen Einstieg verdient gemacht hat. Auch wenn Python mehr Vorkenntnisse erfordert und keine optische Nutzerumgebung bereithält, liegt der Vorteil auf der Hand: Python kann nahezu alles. Unserer Datenaufbereitung sind keine Grenzen mehr gesetzt und wir können von Datenbereinigung, über KI-gestützte Analyse bis zur Visualisierung alles in einer Entwicklungsumgebung umsetzen.
+
+In Python steht für die Verarbeitung tabellarischer Daten eine umfangreiche Bibliothek zur Verfügung: pandas.
+In den folgenden Abschnitten werden wir in die Datenverarbeitung mit pandas einführen.
+Eine vollständige Dokumentation von pandas bietet zum Beispiel die [w3school pandas documentation](https://www.w3schools.com/python/pandas/default.asp).
+
+

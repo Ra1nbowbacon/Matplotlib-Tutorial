@@ -1,0 +1,110 @@
+---
+title: "Line Charts"
+format:
+  html:
+    code-fold: true
+jupyter: python3 
+---
+
+Line Charts beziehungsweise Liniendiagramme sind besonders für die Darstellung von Datenpunkten über einen kontinuierlichen Zeitraum geeignet. In ihnen wird in der Regel der Zusammenhang zweier Merkmale dargestellt. Möglich sind hier auch Multiple Line Charts, bei denen mehrere Datenreihen gleichzeitig angezeigt werden, wobei Trends über die Zeit verglichen werden können. 
+
+### Grundsätzliche Struktur eines Liniendiagramms
+
+Im folgenden Beispiel erstellen wir ein einfaches Liniendiagramm, um eine Reihe von Werten über verschiedene Zeitpunkte darzustellen:
+
+```{python}
+import matplotlib.pyplot as plt
+
+# Beispiel-Daten
+x = [1, 2, 3, 4, 5]  # Zeitpunkte (z.B. Tage)
+y = [2, 3, 5, 7, 11]  # Werte (z.B. Messungen oder Werte an diesen Zeitpunkten)
+
+# Erstellen des Liniendiagramms
+plt.plot(x, y)
+
+# Hinzufügen von Beschriftungen und Titel
+plt.xlabel('Zeitpunkte')
+plt.ylabel('Werte')
+plt.title('Einfaches Liniendiagramm')
+
+# Anzeigen des Diagramms
+plt.show()
+
+```
+
+### Beispiel anhand des RTV-Datensatzes 
+
+In diesem Beispiel analysieren wir die Entwicklung tödlicher Fälle in Deutschland. Dabei verwenden wir den RTV-Datensatz, um die Anzahl der Fälle über die Jahre darzustellen. 
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dateipfad
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Lese Excel-Datei ein 
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Filter für "Germany", nur tödliche Fälle
+df_germany = df[(df['country_name'] == 'Germany') & (df['fatal'] == 1)]
+
+# Häufigkeit der Jahre zählen
+year_counts_germany = df_germany['year'].value_counts().sort_index()
+
+# Liniendiagramm erstellen
+plt.plot(year_counts_germany.index, year_counts_germany.values, label='Germany')
+
+# Hinzufügen von Beschriftungen und Titel
+plt.xlabel('Jahr')
+plt.ylabel('Wert')
+plt.title('Verteilung der tödlichen Fälle nach Jahr (Deutschland)')
+
+# Anzeigen des Diagramms
+plt.show()
+``` 
+
+### Multiple Line Charts 
+
+Um mehrere Datensätze gleichzeitig zu vergleichen, verwenden wir Multiple Line Charts. Dies hilft, Unterschiede und Ähnlichkeiten in den Trends zwischen verschiedenen Gruppen oder Kategorien sichtbar zu machen. Hier vergleichen wir die Entwicklung der Fälle rechter Gewalt zwischen Italien, Deutschland und Frankreich ab 2015: 
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dateipfad
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Lese Excel-Datei ein 
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Filter für Deutschland, Italien und Frankreich ab dem Jahr 2015
+df_filtered = df[(df['country_name'].isin(['Germany', 'Italy', 'France'])) & (df['year'] >= 2015)]
+
+# Filter für jedes Land separat
+df_germany = df_filtered[df_filtered['country_name'] == 'Germany']
+df_italy = df_filtered[df_filtered['country_name'] == 'Italy']
+df_france = df_filtered[df_filtered['country_name'] == 'France']
+
+# Häufigkeit der Jahre zählen
+year_counts_germany = df_germany['year'].value_counts().sort_index()
+year_counts_italy = df_italy['year'].value_counts().sort_index()
+year_counts_france = df_france['year'].value_counts().sort_index()
+
+# Liniendiagramm erstellen 
+plt.plot(year_counts_germany.index, year_counts_germany.values, color='blue', label='Germany')
+plt.plot(year_counts_italy.index, year_counts_italy.values, color='orange', label='Italy')
+plt.plot(year_counts_france.index, year_counts_france.values, color='red', label='France')
+
+# Hinzufügen von Beschriftungen und Titel
+plt.xlabel('Jahr')
+plt.ylabel('Häufigkeit')
+plt.title('Verteilung der Fälle ab 2015: Deutschland, Italien und Frankreich')
+plt.legend()  # Fügt eine Legende hinzu
+
+# Anzeigen des Diagramms
+plt.show()
+```
+

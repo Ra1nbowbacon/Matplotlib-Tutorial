@@ -1,0 +1,75 @@
+---
+title: "Scatter Plots"
+format:
+  html:
+    code-fold: true
+jupyter: python3 
+---
+
+Scatter Plots, auch bekannt als Punktwolken oder Streudiagramme, eignen sich besonders für die Untersuchung von Beziehungen oder Korrelationen zwischen zwei Variablen. Auch Ausreißer können gut identifiziert werden, weil man direkt erkennen kann, wenn ein Punkt weit vom Rest der Daten entfernt ist. Im Unterschied zu Liniendiagrammen, die Trends über eine kontinuierliche Variable darstellen, zeigen sie, wie sich einzelne Datenpunkte in Bezug auf zwei Variablen verteilen. 
+
+### Grundsätzliche Struktur eines Scatter Plots 
+
+Das folgende Beispiel zeigt die grundlegende Struktur eines einfachen Scatter Plots: 
+
+```{python}
+import matplotlib.pyplot as plt
+
+# Beispiel-Daten
+x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+y = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+
+# Scatterplot erstellen
+plt.scatter(x, y)
+
+# Achsenbeschriftungen und Titel hinzufügen (optional)
+plt.xlabel('X-Achse')
+plt.ylabel('Y-Achse')
+plt.title('Einfaches Scatterplot-Beispiel')
+
+# Plot anzeigen
+plt.show()
+```
+
+### Beispiel anhand des RTV-Datensatzes 
+
+In diesem Beispiel vergleichen wir die Zahl der Fälle in den drei Ländern mit den meisten Fällen rechter Gewalt über die Jahre hinweg. Für diese Darstellung wäre prinzipiell ein Liniendiagramm auch geeignet: Der Scatterplot ermöglicht es uns aber, die Datenpunkte für jedes Land getrennt zu visualisieren. 
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dateipfad zur Excel-Datei
+file_path = '2023-rtv-1990-2022_without-sources.xlsx'
+
+# Lese Excel-Datei ein
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Gruppieren nach Jahr und Land und Zählen der Vorfälle
+incident_counts = df.groupby(['country_name', 'year']).size().reset_index(name='incident_count')
+
+# Berechnen der Gesamtanzahl der Vorfälle pro Land
+total_incidents_per_country = incident_counts.groupby('country_name')['incident_count'].sum().reset_index()
+
+# Finden der fünf Länder mit den meisten Vorfällen
+top_5_countries = total_incidents_per_country.nlargest(3, 'incident_count')['country_name']
+
+# Filtere die Daten für die fünf Länder mit den meisten Vorfällen
+top_5_data = incident_counts[incident_counts['country_name'].isin(top_5_countries)]
+
+for i, country in enumerate(top_5_countries):
+    country_data = top_5_data[top_5_data['country_name'] == country]
+    plt.scatter(country_data['year'], country_data['incident_count'], label=country)
+
+# Achsenbeschriftungen und Titel hinzufügen
+plt.xlabel('Year')
+plt.ylabel('Number of Incidents')
+plt.title('Number of Incidents per Year for Top 3 Countries')
+plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+# Plot anzeigen
+plt.show()
+``` 
+
+
+

@@ -1,0 +1,93 @@
+---
+title: "Datensatz sortieren"
+---
+Die einfachste Sortierung, die ein Datensatz haben kann, ist sein Index. Pandas generiert automatisch einen Index für alle Zeilen der Tabelle in aufsteigender Reihenfolge. Meist folgen die Daten in einem Datensatz zusätzlich einer bestimmten Sortierlogik, in unserem Beispiel sind sie chronologisch geordnet. 
+Mit pandas können wir nicht nur neue Sortierkriterien festlegen, sondern auch bestimmte Teilbereiche eines Datensatzes gruppieren oder aussortieren.
+
+___
+## Daten auswählen 
+Wollen wir aus unseren Daten nur bestimmte Spalten oder Zeilen auswählen oder die Bereiche beschränken, auf denen wir unsere Operationen ausführen, können wir diese aus dem Dataframe separieren.
+
+```{python}
+# pandas laden und Datensatz einlesen
+import pandas as pd
+df = pd.read_excel('2023-rtv-1990-2022_without-sources.xlsx')
+```
+
+```{python}
+# doppelte Klammern [[]] sorgen dafür, dass ein Dataframe zurückgeliefert wird
+# mit einfachen Klammern [] würden wir eine Serie zurückerhalten
+filtered_df = df[['country_name']]
+filtered_df.head()
+```
+<br><br>
+Wir können festlegen, nach welchen Kriterien bestimmt Bereiche eines Dataframe aussortiert werden sollen. Mit logischen Operatoren können wir mehrere Kriterien verknüpfen. In unserem Beispiel separieren wir alle Daten aus Deutschland vor dem Jahrtausendwechsel.
+
+```{python}
+germany_bevor2000_df = df[(df['country_name']=='Germany') & (df['year']<2000)]
+
+germany_bevor2000_df.tail()
+```
+
+<br><br>
+Mit der Methode isin() können wir ebenfalls mehrere Auswahlkriterien miteinander verknüpfen. In unserem Beispiel die Jahre 1990 und 2015. 
+
+```{python}
+some_years_df = df[df['year'].isin([1990, 2015])]
+some_years_df.head(2)
+```
+
+
+<br><br>
+Weitere Funktionen zum Auswählen von Teilbereichen unserer Daten sind loc[ ] und iloc[ ]. Wobei loc[ ] als Parameter einen Wert aus dem Dataframe erwartet und iloc[ ] einen Index. Dabei verhält sich die Selektion mit iloc[ ] wie aus Python bekannt so, dass der Zielindex nicht in der Ergebnismenge enthalten ist. iloc[1:3] liefert also Index 1 und 2. Dagegen sind bei loc['1990':'2000'] die 2000er Jahre im Ergebnis enthalten.
+Da es sich um ein Subset einer bestehenden Menge handelt, müssen wir hier eckige Klammern verwenden.
+
+```{python}
+subset_df = df.iloc[1:3] 
+subset_df.head()
+```
+
+
+
+___
+## Daten gruppieren
+Um Operationen nur auf einem bestimmten Teil unserer Daten auszuführen können wir unseren Dataframe gruppieren. Dazu stellt uns pandas die Funktion groupby() zur Verfügung. 
+In unserem Beispiel groupieren wir nach 'country_name' und, darauf basierend, auf 'grouped_target_group' und führen anschließend die Operation size() auf dieser Gruppierung aus um zu erfahren, wie häufig eine target_group pro Land auftaucht. Das Ergebnis weisen wir in einem neuen Dataframe zu (occurrence_count).
+
+```{python}
+occurrence_count= df.groupby(['country_name', 'grouped_target_group']).size()
+
+occurrence_count.head(20)
+```
+<br><br>
+Die groupby() Funktion eignet sich auch dazu, eine numerische Darstellung aus nichtnumerischen Daten zu gewinnen. In geisteswissenschaftlichen Forschungskontexten begegnen wir häufig nichtnumerischen Werten. Um numerische Daten aus ihnen abzuleiten können wir sie nach Gleichheit gruppieren, anschließend akkumulieren wir die gleichen Werte mit count() und lassen uns das Ergebnis ausgeben.
+
+```{python}
+df.groupby('country_name').count()
+```
+<br><br>
+Pandas stellt uns auch die Funktion unique() bereit. Sie listet die einmaligen Werte in einer Spalte und nunique() gibt die Anzahl der einmaligen Werte aus. Für unseren Datensatz können wir somit feststellen, dass Daten aus 18 verschiedenen Ländern über 33 Jahre hinweg erhoben wurden. 
+
+```{python}
+df.nunique().head()
+```
+<br><br>
+value_counts() liefert die Häufigkeit aller Werte in einer Spalte zurück. In unserem Beispiel möchten wir für die Spalte grouped_target_group wissen, welche unterschiedlichen Opfergruppen im Datensatz existieren und wie häufig sie vorkommen.
+
+```{python}
+df['grouped_target_group'].value_counts()
+```
+
+___
+## Sortierung ändern
+Um die Sortierung unserer Daten zu ändern, haben wir verschiedene sort() Funktionen zur Verfügung. In unserem Beispiel sortieren wir die Werte mit sort_values(). Wir können der Funktion Parameter übergeben um unser Anliegen zu spezifizieren. 
+
+```{python}
+sorted_df = df.sort_values(
+    by=['country_name'], # Spalten angeben, nach denen sortiert werden soll
+    ascending=True, # auf- oder absteigend sortieren
+    ignore_index=True, # den Index neu setzen
+)
+sorted_df.head()
+```
+

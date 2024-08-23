@@ -1,0 +1,50 @@
+---
+title: "Quellen"
+---
+
+### Datensatz
+
+[RTV Datensatz](https://www.sv.uio.no/c-rex/english/groups/rtv-dataset/index.html)
+
+___
+### Python
+
+[realpython Installationsguide](https://realpython.com/installing-python/)
+
+[Jupyter/ Anaconda YouTube Tutorial](https://www.youtube.com/watch?v=WUeBzT43JyY)
+
+[w3school python documentation](https://www.w3schools.com/python/)
+
+[Python YouTube Tutorial](https://www.youtube.com/watch?v=rfscVS0vtbw)
+
+___
+### Datenverarbeitung
+
+
+[OpenRefine](https://openrefine.org/)
+
+[w3school pandas documentation](https://www.w3schools.com/python/pandas/default.asp)
+
+[realpython Einführung in pandas Joins](https://realpython.com/pandas-merge-join-and-concat/)
+
+
+___
+### Visualisierung
+
+[matplotlib Dokumentation](https://de.matplotlib.net/)
+
+Cairo, Alberto: *The Functional Art. An introduction to information graphics and visualization*, Voices That Matter, 2012.
+
+Cairo, Alberto: *The Truthful Art. Data, Charts, and Maps for Communication*, Voices That Matter, 2016.
+
+Classen, Lew: *Mit Jupyter durchs Physikpraktikum*, Wiesbaden, 2022.
+
+Evergreen, Stephanie D.H.: *The Data Visualization Sketchbook*, Los Angeles (u.a.) 2020.
+
+Lisnic, Maxim(u.a.): *Misleading Beyond Visual Tricks: How People Actually Lie with Charts*, Hamburg 2023.
+
+Rahm, Erhard; Hong Hai Do: *Data Cleaning: Problems and Current Approaches* in: *Bulletin of the Technical Committee on Data Engineering*, Vol. 23, Nr. 4, 2000. https://tc.computer.org/tcde/data-engineering-bulletin/ (letzter Zugriff Juli 2024)
+
+Segel, Edward; Heer, Jeffrey: *Narrative Visualization: Telling Stories with Data*, in: *IEEE Transactions on Visualization and Computer Graphics*, Vol. 16, Nr. 6, 2010.
+
+Wilke, Claus O.: *Fundamentals of Data Visualization. A Primer on Making Informative and Compelling Figures*, O'Reilly Media, 2019.
